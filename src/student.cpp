@@ -238,7 +238,11 @@ using namespace std;
 // =============================================================================
 
 bool push(Stack& s, int nilai) {
-    return false;
+    Node* baru = new Node;
+    baru -> data = nilai;
+    baru -> next = s.top;
+    s.top = baru;
+    return true;
 }
 
 // =============================================================================
@@ -300,7 +304,12 @@ bool push(Stack& s, int nilai) {
 // =============================================================================
 
 bool pop(Stack& s, int& nilai) {
-    return false;
+    if (s.top == nullptr) return false;
+    Node* hapus = s.top;
+    nilai = hapus -> data;
+    s.top = hapus -> next;
+    delete hapus;
+    return true;
 }
 
 // =============================================================================
@@ -347,6 +356,12 @@ bool pop(Stack& s, int& nilai) {
 // =============================================================================
 
 void clear(Stack& s) {
+    while (s.top != nullptr) {
+       Node* hapus = s.top;
+       s.top = hapus -> next;
+       delete hapus;
+    }
+    
 }
 
 // =============================================================================
@@ -410,7 +425,41 @@ void clear(Stack& s) {
 // =============================================================================
 
 bool kurungSeimbang(const string& ekspresi) {
-    return false;
+    Stack s;
+    inisialisasi(s);
+
+    for (char c : ekspresi) {
+        if (c == '(' || c == '[' || c == '{') {
+            push(s, c);
+        }else if (c == ')' || c == ']' || c == '}') {
+            int atas;
+            if (!pop(s, atas)) {
+                clear(s);
+                return false;
+            }
+
+            char harapan;
+            if (c == ')') {
+                harapan = '(';
+            }else if (c == ']') {
+                harapan = '[';
+            }else {
+                harapan = '{';
+            }
+            
+            if (atas != harapan) {
+                clear(s);
+                return false;
+            }
+            
+        }
+        
+    }
+    
+    bool seimbang = isEmpty(s);
+    clear(s);
+    
+    return seimbang;
 }
 
 // =============================================================================
